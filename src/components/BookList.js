@@ -4,6 +4,11 @@ const BookList = (props) => {
         const afterRemoveBooks = props.books.filter((b,i) => i!= index)
         props.setBooks(afterRemoveBooks)
     }
+
+    const editBook = (index) => {
+        props.setEdit(true)
+        props.setBook({...props.books[index], index:index})
+    }
     const allBook = props.books.map((b,index)=> (
         <tr className="">
             <td>{index+1}</td>
@@ -12,7 +17,7 @@ const BookList = (props) => {
             <td>{b.description}</td>
             <td>{b.status}</td>
             <td><button onClick={() =>removeBook(index)}>Delete</button></td>
-            <td><button>Edit</button></td>
+            <td><button onClick={() => editBook(index)}>Edit</button></td>
             <td><button>View detail</button></td>
 
         </tr>

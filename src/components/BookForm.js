@@ -2,26 +2,28 @@ import { useState } from "react"
 
 const BookForm = (props) => {
     const statuses = ["read","unread"]
-    const [book,setBook] = useState({
-        title: "",
-        author:"",
-        description:"",
-        status:"read"
-    })
+
     const onChangeValues = event => {
         const name = event.target.name;
         const value = event.target.value;
-        setBook({...book,[name]:value})
+        props.setBook({...props.book,[name]:value})
     }
 
     const onSubmitBook = (e) => {
         e.preventDefault();
-        props.setBooks([...props.books,book])
+        if(!props.edit) {
+            props.setBooks([...props.books,props.book])
+        } else {
+            const books = props.books;
+            props.books[props.book.index] = props.book;
+            props.setBooks(books)
+        }
+        props.setEdit(false)
         clearFields();
     }
     
     const clearFields = () => {
-        setBook({
+        props.setBook({
             title: "",
             author:"",
             description:"",
@@ -29,20 +31,30 @@ const BookForm = (props) => {
         })
     }
 
+    const canceledit = () => {
+        clearFields();
+        props.setEdit(false)
+    }
+
     return (
         <div>
             <form onSubmit={(e) => onSubmitBook(e)}>
+                {props.edit &&  <div>
+                    <label>index</label>
+                    <input readOnly={true} value={props.book.index}/>
+                </div>}
+
                 <div>
                     <label>Title</label>
-                    <input name="title" value={book.title} onChange={(e)=>onChangeValues(e)}></input>
+                    <input name="title" value={props.book.title} onChange={(e)=>onChangeValues(e)}></input>
                 </div>
                 <div>
                     <label>Author</label>
-                    <input name="author" value={book.author} onChange={(e)=>onChangeValues(e)}></input>
+                    <input name="author" value={props.book.author} onChange={(e)=>onChangeValues(e)}></input>
                 </div>
                 <div>
                     <label>Status</label>
-                    <select onChange={(e)=>onChangeValues(e)} name="status" value={book.status}>
+                    <select onChange={(e)=>onChangeValues(e)} name="status" value={props.book.status}>
                         {statuses.map(s=>(
                             <option value={s}>{s}</option>
                         ))}
@@ -51,9 +63,10 @@ const BookForm = (props) => {
                 
                 <div>
                     <label>Description</label>
-                    <input onChange={e=>onChangeValues(e)} name="description" value={book.description} />
+                    <input onChange={e=>onChangeValues(e)} name="description" value={props.book.description} />
                 </div>
-                <button type="submit">Add Book</button>
+                <button type="submit">{props.edit ? "Edit book" : "Add book"}</button>
+                {props.edit && <button type="button" onClick={() => canceledit()}>Cancel Edit</button>}
             </form>
         </div>
     )

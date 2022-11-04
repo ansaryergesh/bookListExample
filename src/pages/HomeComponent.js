@@ -8,18 +8,39 @@ function HomeComponent() {
         title: "title",
         author:"author",
         description:"description",
-        status:"status"
+        status:"read"
     },
     {
       title: "title2",
       author:"author2",
       description:"description2",
-      status:"status2"
+      status:"unread"
   }])
+    const [book,setBook] = useState({
+        index: "",
+        title: "",
+        author:"",
+        description:"",
+        status:"read"
+    });
+    const [edit,setEdit] = useState(false);
+
     return (
       <div className="App">
-        <BookList books ={books} setBooks={setBooks} />
-        <BookForm setBooks={setBooks} books={books}/>
+        <BookList
+            books ={books}
+            setBooks={setBooks}
+            edit={edit}
+            setEdit={setEdit}
+            book={book}
+            setBook={setBook}/>
+        <BookForm
+            setBooks={setBooks}
+            books={books}
+            edit={edit}
+            setEdit={setEdit}
+            book={book}
+            setBook={setBook}/>
       </div>
     );
   }
